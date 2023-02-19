@@ -1,20 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
+import {
+  useFonts,
+  Overpass_300Light,
+  Overpass_400Regular,
+  Overpass_600SemiBold,
+  Overpass_700Bold,
+} from '@expo-google-fonts/overpass';
 
-import {useFonts} from 'expo-font';
 import Home from './src/screens/Home';
+import Welcome from './src/screens/Welcome';
 
 export default function App() {
-  const [fontLoaded] = useFonts({
-    'Overpass-Light': require('./src/theme/fonts/Overpass-Light.ttf'),
-    'Overpass-Regular': require('./src/theme/fonts/Overpass-Regular.ttf'),
-    'Overpass-Medium': require('./src/theme/fonts/Overpass-Medium.ttf'),
-    'Overpass-Bold': require('./src/theme/fonts/Overpass-Bold.ttf'),
+  const [fontsLoaded] = useFonts({
+    Overpass_300Light,
+    Overpass_400Regular,
+    Overpass_600SemiBold,
+    Overpass_700Bold,
   });
+  if(!fontsLoaded){
+    return;
+  }
 
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Home />
+      {/* <Welcome /> */}
     </>
   );
 }
