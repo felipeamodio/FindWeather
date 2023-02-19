@@ -1,6 +1,8 @@
 import React from "react";
 import { Image } from "react-native";
 
+import {useNavigation} from '@react-navigation/native';
+
 import Divider from "../../components/Divider";
 import RainingPNG from "../../assets/raining.png";
 import Temperature from "../../components/Temperature";
@@ -70,12 +72,14 @@ const dataCardHourTemperature = [
 ];
 
 const Home = (): JSX.Element => {
+  // const navigation = useNavigation();
+
   return (
     <S.Scroll>
       <S.Container>
         <Divider top={27} />
 
-        <S.LocationIconContainer>
+        <S.LocationIconContainer onPress={() => {}}>
           <Ionicons
             name="location-sharp"
             size={22}

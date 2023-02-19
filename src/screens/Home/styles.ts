@@ -44,7 +44,7 @@ export const Next7DaysContainer = styled.TouchableOpacity.attrs(() => ({
   height: 30px;
 `;
 
-export const LocationIconContainer = styled.View`
+export const LocationIconContainer = styled.TouchableOpacity`
   flex-direction: row;
   width: 100%;
   justify-content: center;

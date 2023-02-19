@@ -9,6 +9,7 @@ import {
 
 import Home from './src/screens/Home';
 import Welcome from './src/screens/Welcome';
+import Search from './src/screens/Search';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -24,8 +25,9 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <Home />
+      {/* <Home /> */}
       {/* <Welcome /> */}
+      <Search />
     </>
   );
 }
