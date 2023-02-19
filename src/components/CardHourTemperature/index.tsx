@@ -19,7 +19,7 @@ interface ICardHourTemperatureData {
 
 const CardHourTemperature = ({
   data,
-}: ICardHourTemperatureData): JSX.Element => {
+}: ICardHourTemperatureData) => {
   return (
     <S.Container>
       {data.map((item) => (

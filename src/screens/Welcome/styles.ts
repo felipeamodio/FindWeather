@@ -6,7 +6,7 @@ const Container = styled.ScrollView.attrs<ScrollViewProps>(() => ({
   showsVerticalScrollIndicator: false
 }))`
   flex: 1;
-  background-color: ${theme.colors.dark};
+  background-color: ${theme.colors.dark[500]};
   padding: 0 16px;
 `;
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { TouchableOpacityProps } from "react-native";
 
-import Styled from "./styles";
+import * as S from "./styles";
 
 export interface IButton extends TouchableOpacityProps {
   children: ReactNode;
@@ -18,9 +18,9 @@ const Button = ({
   borderRadius,
   height,
   ...rest
-}): JSX.Element => {
+}: IButton) => {
   return (
-    <Styled.Button
+    <S.Button
       backgroundColor={backgroundColor}
       borderColor={borderColor}
       borderRadius={borderRadius}
@@ -28,7 +28,7 @@ const Button = ({
       {...rest}
     >
       {children}
-    </Styled.Button>
+    </S.Button>
   );
 };
 

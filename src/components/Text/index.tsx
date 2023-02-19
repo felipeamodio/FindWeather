@@ -1,6 +1,6 @@
 import React from "react";
 import { TextProps } from "react-native";
-import Styled from "./styles";
+import * as S from "./styles";
 
 export interface IText extends TextProps {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ const Text = ({
   ...rest
 }: IText): JSX.Element => {
   return (
-    <Styled.Text
+    <S.Text
       fontFamily={fontFamily}
       fontSize={fontSize}
       color={color}
@@ -27,7 +27,7 @@ const Text = ({
       {...rest}
     >
       {children}
-    </Styled.Text>
+    </S.Text>
   );
 };
 

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { IButton } from '.';
 
 
-const Button = styled.TouchableOpacity.attrs(() => ({
+export const Button = styled.TouchableOpacity.attrs(() => ({
   activeOpacity: 0.75,
 }))<IButton>`
   background-color: ${({backgroundColor}) => backgroundColor};
@@ -12,7 +12,3 @@ const Button = styled.TouchableOpacity.attrs(() => ({
   height: ${({height}) => height}px;
   justify-content: center; 
 `;
-
-export default {
-  Button
-};
