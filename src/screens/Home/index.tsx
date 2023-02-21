@@ -1,8 +1,7 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
-import {useNavigation} from '@react-navigation/native';
-
+import Text from "../../components/Text";
 import Divider from "../../components/Divider";
 import RainingPNG from "../../assets/raining.png";
 import Temperature from "../../components/Temperature";
@@ -12,11 +11,21 @@ import CardHourTemperature from "../../components/CardHourTemperature";
 import theme from "../../theme";
 import * as S from "./styles";
 
-import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
 
 import DropMiniaturePNG from "../../assets/drop-miniature.png";
 import WindMiniaturePNG from "../../assets/wind-miniature.png";
 import RainingCloudPNG from "../../assets/raining-cloud-miniature.png";
+import ClimateChangePNG from "../../assets/climate-change.png";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { IStackRoutes } from "../../routes/stack.routes";
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<IStackRoutes, "Home">;
+
+type Props = {
+  navigation: HomeScreenNavigationProp;
+};
 
 const dataWeatherDescription = [
   {
@@ -71,111 +80,158 @@ const dataCardHourTemperature = [
   },
 ];
 
-const Home = (): JSX.Element => {
-  // const navigation = useNavigation();
-
+const EmptyStateContent = ({ navigation }: Props) => {
   return (
-    <S.Scroll>
-      <S.Container>
-        <Divider top={27} />
+    <S.Container>
+      <S.ContainerEmptyState>
+        <Divider top={60} />
 
-        <S.LocationIconContainer onPress={() => {}}>
-          <Ionicons
-            name="location-sharp"
-            size={22}
+        <Text
+          fontFamily={theme.fontFamily.regular}
+          fontSize={theme.fontSize.XXL}
+          color={theme.colors.light.white}
+        >
+          Find
+          <Text
+            fontFamily={theme.fontFamily.bold}
+            fontSize={theme.fontSize.XXL}
             color={theme.colors.light.white}
-          />
+          >
+            Weather
+          </Text>
+        </Text>
 
-          <S.LocationTextContainer>
-            <S.LocationCityCountryContainer>
-              <S.Label
-                fontFamily={theme.fontFamily.regular}
-                fontSize={theme.fontSize.SM}
-                color={theme.colors.light.white}
-              >
-                {""} Guarulhos, SP {""}
-              </S.Label>
+        <Divider top={100} />
 
-              <S.Label
-                fontFamily={theme.fontFamily.regular}
-                fontSize={theme.fontSize.SM}
-                color={theme.colors.light.white}
-              >
-                - Brasil
-              </S.Label>
-            </S.LocationCityCountryContainer>
+        <Image source={ClimateChangePNG} />
 
-            <Divider top={3} />
+        <Divider top={100} />
 
-            <S.Label
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Search")}
+          activeOpacity={0.75}
+        >
+          <Text
+            fontFamily={theme.fontFamily.regular}
+            fontSize={theme.fontSize.MD}
+            color={theme.colors.gray[100]}
+            style={{ textDecorationLine: "underline" }}
+          >
+            Selecione aqui um local e {"\n"} encontre o clima em tempo real
+          </Text>
+        </TouchableOpacity>
+      </S.ContainerEmptyState>
+    </S.Container>
+  );
+};
+
+const FullContent = () => (
+  <>
+    <S.Container>
+      <Divider top={27} />
+
+      <S.LocationIconContainer>
+        <Ionicons name="location-sharp" size={22} color={theme.colors.light.white} />
+
+        <S.LocationTextContainer>
+          <S.LocationCityCountryContainer>
+            <Text
               fontFamily={theme.fontFamily.regular}
-              fontSize={theme.fontSize.XS}
-              color={theme.colors.gray[100]}
+              fontSize={theme.fontSize.SM}
+              color={theme.colors.light.white}
             >
-              {""} Sábado, 18 Fev de 2023
-            </S.Label>
-          </S.LocationTextContainer>
-        </S.LocationIconContainer>
+              {""} A Coruña, {""}
+            </Text>
 
-        <Divider top={19} />
+            <Text
+              fontFamily={theme.fontFamily.regular}
+              fontSize={theme.fontSize.SM}
+              color={theme.colors.light.white}
+            >
+              Espanha
+            </Text>
+          </S.LocationCityCountryContainer>
 
-        <S.ImageContainer>
-          <Image source={RainingPNG} />
-        </S.ImageContainer>
+          <Divider top={3} />
 
-        <Temperature
-          maxTemp={23}
-          minTemp={18}
-          maxTempFontSize={theme.fontSize.Giant}
-          minTempFontSize={theme.fontSize.XL}
-        />
-
-        <S.Label
-          fontFamily={theme.fontFamily.regular}
-          fontSize={theme.fontSize.MD}
-          color={theme.colors.gray[100]}
-        >
-          Chuva Moderada
-        </S.Label>
-      </S.Container>
-
-      <Divider top={30} />
-
-      <WeatherDescription data={dataWeatherDescription} />
-
-      <Divider top={30} />
-
-      <S.TodayAnd7NextDaysContainer>
-        <S.Label
-          fontFamily={theme.fontFamily.regular}
-          fontSize={theme.fontSize.MMD}
-          color={theme.colors.gray[100]}
-        >
-          Hoje
-        </S.Label>
-
-        <S.Next7DaysContainer>
-          <S.Label
+          <Text
             fontFamily={theme.fontFamily.regular}
             fontSize={theme.fontSize.XS}
             color={theme.colors.gray[100]}
           >
-            Próximos 7 dias
-          </S.Label>
+            {""} Domingo, 01 Jan de 2023
+          </Text>
+        </S.LocationTextContainer>
+      </S.LocationIconContainer>
 
-          <SimpleLineIcons
-            name="arrow-right"
-            size={11}
-            color={theme.colors.gray[100]}
-            style={{ marginLeft: 4 }}
-          />
-        </S.Next7DaysContainer>
-      </S.TodayAnd7NextDaysContainer>
+      <Divider top={19} />
 
-      <Divider top={15} />
+      <S.ImageContainer>
+        <Image source={RainingPNG} />
+      </S.ImageContainer>
 
-      <CardHourTemperature data={dataCardHourTemperature} />
-    </S.Scroll>
+      <Temperature
+        maxTemp={23}
+        minTemp={18}
+        maxTempFontSize={theme.fontSize.Giant}
+        minTempFontSize={theme.fontSize.XL}
+      />
+
+      <Text
+        fontFamily={theme.fontFamily.regular}
+        fontSize={theme.fontSize.MD}
+        color={theme.colors.gray[100]}
+      >
+        Chuva Moderada
+      </Text>
+    </S.Container>
+
+    <Divider top={30} />
+
+    <WeatherDescription data={dataWeatherDescription} />
+
+    <Divider top={30} />
+
+    <S.TodayAnd7NextDaysContainer>
+      <Text
+        fontFamily={theme.fontFamily.regular}
+        fontSize={theme.fontSize.MMD}
+        color={theme.colors.light.white}
+      >
+        Hoje
+      </Text>
+
+      <S.Next7DaysContainer>
+        <Text
+          fontFamily={theme.fontFamily.regular}
+          fontSize={theme.fontSize.XS}
+          color={theme.colors.gray[100]}
+        >
+          Próximos 7 dias
+        </Text>
+
+        <SimpleLineIcons
+          name="arrow-right"
+          size={11}
+          color={theme.colors.gray[100]}
+          style={{ marginLeft: 4 }}
+        />
+      </S.Next7DaysContainer>
+    </S.TodayAnd7NextDaysContainer>
+
+    <Divider top={15} />
+
+    <CardHourTemperature data={dataCardHourTemperature} />
+
+    <Divider bottom={15} />
+  </>
+);
+
+const Home = ({ navigation }: Props): JSX.Element => {
+  return (
+    <S.ScrollView>
+      <EmptyStateContent navigation={navigation} />
+    </S.ScrollView>
   );
 };
 

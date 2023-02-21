@@ -1,29 +1,45 @@
 import styled from 'styled-components/native';
+import { Platform, StatusBar, TouchableOpacityProps } from 'react-native';
 import theme from '../../theme';
 
+const getStatusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight : 0;
+
 export const Container = styled.SafeAreaView`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    background-color: ${theme.colors.dark[500]};
+  margin-top: ${getStatusBarHeight}px;
+`;
+
+export const ScrollView = styled.ScrollView`
+  flex: 1;
+  background-color: ${theme.colors.dark[500]};
+  padding: 0 16px;
+`;
+
+export const ContainerInputButton = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export const ContainerInput = styled.View`
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 90%;
-    height: 56px;
-    border: 1px solid;
-    border-color: ${theme.colors.light.white};
-    border-radius: 12px;
-    padding: 10px;
+  flex-direction: row;
+  background-color: ${theme.colors.dark[400]};
+  padding: 15px 8px;
+  border-radius: 11px;
+  width: 80%;
 `;
 
 export const Input = styled.TextInput`
-    width: 100%;
-    color: ${theme.colors.gray[200]};
-    font-size: ${theme.fontSize.SM}px;
-    padding-left: 10px;
+  font-family: ${theme.fontFamily.regular};
+  color: ${theme.colors.light.white};
+  font-size: ${theme.fontSize.XS}px;
+  margin: 0 8px 0 8px;
+  width: 80%
 `;
 
+export const SearchButton = styled.TouchableOpacity<TouchableOpacityProps>`
+  background-color: ${theme.colors.dark[400]};
+  padding: 13px 9px;
+  border-radius: 11px;
+  width: 55px;
+  align-items: center;
+`;

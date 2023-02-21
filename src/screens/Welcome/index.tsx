@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Image, SafeAreaView } from "react-native";
+import { Image, SafeAreaView } from "react-native";
 import Button from "../../components/Button";
 import Divider from "../../components/Divider";
 import Text from "../../components/Text";
@@ -7,7 +7,19 @@ import theme from "../../theme";
 
 import CloudAndThunderPNG from "../../assets/cloud-and-thunder.png";
 
-import Styled from "./styles";
+import * as S from "./styles";
+
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { IStackRoutes } from "../../routes/stack.routes";
+
+type WelcomeScreenNavigationProp = NativeStackNavigationProp<
+  IStackRoutes,
+  "Welcome"
+>;
+
+type Props = {
+  navigation: WelcomeScreenNavigationProp;
+};
 
 const LetterBold = () => (
   <Text
@@ -19,15 +31,15 @@ const LetterBold = () => (
   </Text>
 );
 
-const Welcome = (): JSX.Element => {
+const Welcome = ({ navigation }: Props): JSX.Element => {
   return (
-    <Styled.Container>
+    <S.Container>
       <SafeAreaView>
         <Divider top={60} />
 
-        <Styled.ContainerImage>
+        <S.ContainerImage>
           <Image source={CloudAndThunderPNG} />
-        </Styled.ContainerImage>
+        </S.ContainerImage>
 
         <Divider top={34} />
 
@@ -35,7 +47,6 @@ const Welcome = (): JSX.Element => {
           fontFamily={theme.fontFamily.semibold}
           fontSize={theme.fontSize.XXL}
           color={theme.colors.light.white}
-          textAlign="center"
           style={{ width: 300, alignSelf: "center" }}
         >
           Descubra o Clima na sua Cidade
@@ -47,6 +58,7 @@ const Welcome = (): JSX.Element => {
           fontFamily={theme.fontFamily.regular}
           fontSize={theme.fontSize.MD}
           color={theme.colors.gray[100]}
+          textAlign="center"
         >
           Com o Find
           <LetterBold /> nunca ficou tão fácil ter a previsão do tempo na palma
@@ -60,7 +72,9 @@ const Welcome = (): JSX.Element => {
           borderColor={theme.colors.gray[300]}
           borderRadius={18}
           height={54}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
         >
           <Text
             fontFamily={theme.fontFamily.regular}
@@ -74,7 +88,7 @@ const Welcome = (): JSX.Element => {
 
         <Divider bottom={10} />
       </SafeAreaView>
-    </Styled.Container>
+    </S.Container>
   );
 };
 
