@@ -50,3 +50,12 @@ export const Next7DaysContainer = styled.TouchableOpacity.attrs(() => ({
   align-items: center;
   height: 30px;
 `;
+
+export const Separator = styled.View`
+  margin-right: 10px;
+`;
+
+export const ContainerTemperature = styled.View`
+  flex-direction: row;
+  align-self: center;
+`;

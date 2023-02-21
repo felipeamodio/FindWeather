@@ -1,5 +1,5 @@
-import { ScrollViewProps } from 'react-native';
 import styled from 'styled-components/native';
+import { ScrollViewProps } from 'react-native';
 import theme from '../../theme';
 
 export const Container = styled.ScrollView.attrs<ScrollViewProps>(() => ({
