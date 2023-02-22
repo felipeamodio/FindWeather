@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Platform,
   SectionList,
   TouchableOpacity,
 } from "react-native";
@@ -10,7 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Text from "../../components/Text";
 import Divider from "../../components/Divider";
-import RainingPNG from "../../assets/raining.png";
 import WeatherDescription from "../../components/WeatherDescription";
 import CardHourTemperature from "../../components/CardHourTemperature";
 
@@ -22,7 +22,8 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 
 import DropMiniaturePNG from "../../assets/drop-miniature.png";
 import WindMiniaturePNG from "../../assets/wind-miniature.png";
-import RainingCloudPNG from "../../assets/raining-cloud-miniature.png";
+import RainingCloudMiniaturePNG from "../../assets/raining-cloud-miniature.png";
+
 import ClimateChangePNG from "../../assets/climate-change.png";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IStackRoutes } from "../../routes/stack.routes";
@@ -33,9 +34,15 @@ import {
   ISearchData,
   IForecastData,
 } from "../../utils/search.interface";
-import { CITY_NAME } from "../../storage/storage.config";
+import {
+  IForecast5Days,
+  IForecastDay,
+} from "../../utils/forecast5days.interface";
+import { CITY_NAME, COUNTRY_CODE } from "../../storage/storage.config";
 import { FindWeatherAPI } from "../../services/findWeatherAPI";
 import { formatDate } from "../../utils/formatDate";
+import { FindWeatherOpenWeatherAPI } from "../../services/findweather-api-openweather";
+import { forecastConditionsIcons } from "../../utils/forecastIcon";
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   IStackRoutes,
@@ -53,50 +60,48 @@ interface IFullContentData {
     forecastday: Array<IForecastData>;
   };
   date: string;
+  navigation: HomeScreenNavigationProp;
+  forecast5Days: Array<IForecastDay>;
 }
 
 const EmptyStateContent = ({ navigation }: Props) => {
   return (
-    <S.Container>
-      <S.ContainerEmptyState>
-        <Divider top={60} />
+    <S.ContainerEmptyState>
+      <Divider top={30} />
 
+      <Text
+        fontFamily={theme.fontFamily.regular}
+        fontSize={theme.fontSize.XXL}
+        color={theme.colors.light.white}
+      >
+        Find
         <Text
-          fontFamily={theme.fontFamily.regular}
+          fontFamily={theme.fontFamily.bold}
           fontSize={theme.fontSize.XXL}
           color={theme.colors.light.white}
         >
-          Find
-          <Text
-            fontFamily={theme.fontFamily.bold}
-            fontSize={theme.fontSize.XXL}
-            color={theme.colors.light.white}
-          >
-            Weather
-          </Text>
+          Weather
         </Text>
+      </Text>
 
-        <Divider top={100} />
+      <Image source={ClimateChangePNG} />
 
-        <Image source={ClimateChangePNG} />
-
-        <Divider top={100} />
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Search")}
-          activeOpacity={0.75}
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Search")}
+        activeOpacity={0.75}
+      >
+        <Text
+          fontFamily={theme.fontFamily.regular}
+          fontSize={theme.fontSize.MD}
+          color={theme.colors.gray[100]}
+          style={{ textDecorationLine: "underline", textAlign: "center" }}
         >
-          <Text
-            fontFamily={theme.fontFamily.regular}
-            fontSize={theme.fontSize.MD}
-            color={theme.colors.gray[100]}
-            style={{ textDecorationLine: "underline" }}
-          >
-            Selecione aqui um local e {"\n"} encontre o clima em tempo real
-          </Text>
-        </TouchableOpacity>
-      </S.ContainerEmptyState>
-    </S.Container>
+          Selecione aqui um local e {"\n"} encontre o clima em tempo real
+        </Text>
+      </TouchableOpacity>
+
+      <Divider top={30} />
+    </S.ContainerEmptyState>
   );
 };
 
@@ -104,10 +109,13 @@ const FullContent = ({
   location,
   current,
   forecast,
+  forecast5Days,
   date,
+  navigation,
 }: IFullContentData) => {
+  const iOS = Platform.OS === "ios";
   const { humidity, wind_kph } = current;
-  const { daily_chance_of_rain } = forecast.forecastday[0].day;
+  const { daily_will_it_rain } = forecast.forecastday[0].day;
 
   const dataWeatherDescription = [
     {
@@ -126,8 +134,8 @@ const FullContent = ({
 
     {
       id: 3,
-      icon: RainingCloudPNG,
-      value: `${Math.floor(daily_chance_of_rain)}%`,
+      icon: RainingCloudMiniaturePNG,
+      value: `${Math.floor(daily_will_it_rain)}%`,
       text: "Chuva",
     },
   ];
@@ -178,10 +186,12 @@ const FullContent = ({
         <Divider top={19} />
 
         <S.ImageContainer>
-          <Image source={RainingPNG} />
+          <S.Image
+            source={forecastConditionsIcons(current.condition.text)}
+          />
         </S.ImageContainer>
 
-        <Divider top={10} />
+        <Divider top={iOS ? 10 : -10} />
 
         <S.ContainerTemperature>
           <Text
@@ -189,21 +199,28 @@ const FullContent = ({
             fontSize={theme.fontSize.Giant}
             color={theme.colors.light.white}
           >
-            {Math.floor(current.temp_c)}
+            {Math.round(current.temp_c)}
           </Text>
           <Text
             fontFamily={theme.fontFamily.bold}
             fontSize={theme.fontSize.LG}
             color={theme.colors.light.white}
+            style={{
+              alignSelf: "center",
+              height: 80,
+            }}
           >
             º
           </Text>
         </S.ContainerTemperature>
 
+        <Divider top={iOS ? 0 : -10} />
+
         <Text
           fontFamily={theme.fontFamily.regular}
           fontSize={theme.fontSize.MD}
           color={theme.colors.gray[100]}
+          style={{ textAlign: "center" }}
         >
           {current.condition.text}
         </Text>
@@ -215,22 +232,29 @@ const FullContent = ({
 
       <Divider top={30} />
 
-      <S.TodayAnd7NextDaysContainer>
+      <S.TodayAnd5NextDaysContainer>
         <Text
           fontFamily={theme.fontFamily.regular}
-          fontSize={theme.fontSize.MMD}
+          fontSize={theme.fontSize.MD}
           color={theme.colors.light.white}
         >
           Hoje
         </Text>
 
-        <S.Next7DaysContainer>
+        <S.Next5DaysContainer
+          onPress={() =>
+            navigation.navigate("Next5Days", {
+              forecast: forecast,
+              forecast5Days: forecast5Days,
+            })
+          }
+        >
           <Text
             fontFamily={theme.fontFamily.regular}
             fontSize={theme.fontSize.XS}
             color={theme.colors.gray[100]}
           >
-            Próximos 7 dias
+            Próximos 5 dias
           </Text>
 
           <SimpleLineIcons
@@ -239,8 +263,8 @@ const FullContent = ({
             color={theme.colors.gray[100]}
             style={{ marginLeft: 4 }}
           />
-        </S.Next7DaysContainer>
-      </S.TodayAnd7NextDaysContainer>
+        </S.Next5DaysContainer>
+      </S.TodayAnd5NextDaysContainer>
 
       <Divider top={15} />
 
@@ -255,7 +279,7 @@ const FullContent = ({
             {
               id: index,
               icon: item.condition.icon,
-              temperatureValue: Math.floor(item.temp_c),
+              temperatureValue: Math.round(item.temp_c),
               hour: item.time.substring(11, 16),
             },
           ];
@@ -272,9 +296,11 @@ const FullContent = ({
 
 const Home = ({ navigation }: Props): JSX.Element => {
   const [city, setCity] = useState(null);
+  const [countryCode, setCountryCode] = useState(null);
   const [response, setResponse] = useState<ISearchData>(null);
   const [currentDate, setCurrentDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [forecast5Days, setForecast5Days] = useState<IForecast5Days>(null);
 
   const getDate = () => {
     setCurrentDate(formatDate());
@@ -282,6 +308,9 @@ const Home = ({ navigation }: Props): JSX.Element => {
 
   const getCityName = useCallback(async () => {
     const storedCity = await AsyncStorage.getItem(CITY_NAME);
+    const storedCountryCode = await AsyncStorage.getItem(COUNTRY_CODE);
+
+    setCountryCode(storedCountryCode);
 
     setCity(storedCity);
 
@@ -301,6 +330,20 @@ const Home = ({ navigation }: Props): JSX.Element => {
       .catch((error) => console.log("Error calling API: ", error));
   };
 
+  const getForecast5Days = async () => {
+    setIsLoading(true);
+
+    await FindWeatherOpenWeatherAPI.getForecast(city, countryCode)
+      .then((res) => {
+        const data: IForecast5Days = res.data;
+
+        setForecast5Days(data);
+      })
+      .catch((error) =>
+        console.log("Error calling 5 next days forecast API: ", error)
+      );
+  };
+
   useFocusEffect(
     useCallback(() => {
       getCityName();
@@ -311,9 +354,11 @@ const Home = ({ navigation }: Props): JSX.Element => {
     if (city) {
       getAPIData();
       getDate();
+      getForecast5Days();
     } else {
       setIsLoading(false);
       setResponse(null);
+      setForecast5Days(null);
     }
   }, [city]);
 
@@ -326,28 +371,32 @@ const Home = ({ navigation }: Props): JSX.Element => {
   }
 
   return (
-    <SectionList
-      style={{ backgroundColor: theme.colors.dark[500], paddingHorizontal: 16 }}
-      sections={[
-        {
-          title: "",
-          data: [
-            response ? (
-              <FullContent
-                current={response.current}
-                location={response.location}
-                forecast={response.forecast}
-                date={currentDate}
-              />
-            ) : (
-              <EmptyStateContent navigation={navigation} />
-            ),
-          ],
-        },
-      ]}
-      renderItem={({ item }) => item}
-      keyExtractor={(_, index) => String(index)}
-    />
+    <>
+      {response ? (
+        <SectionList
+          style={{ backgroundColor: theme.colors.dark, paddingHorizontal: 16 }}
+          sections={[
+            {
+              title: "",
+              data: [
+                <FullContent
+                  current={response.current}
+                  location={response.location}
+                  forecast={response.forecast}
+                  date={currentDate}
+                  forecast5Days={forecast5Days && forecast5Days.list}
+                  navigation={navigation}
+                />,
+              ],
+            },
+          ]}
+          renderItem={({ item }) => item}
+          keyExtractor={(_, index) => String(index)}
+        />
+      ) : (
+        <EmptyStateContent navigation={navigation} />
+      )}
+    </>
   );
 };
 

@@ -11,6 +11,9 @@ export const Container = styled.SafeAreaView`
 
 export const ContainerEmptyState = styled.View`
   align-items: center;
+  background-color: ${theme.colors.dark};
+  justify-content: space-between;
+  height: 100%;
 `;
 
 export const ScrollView = styled.ScrollView`
@@ -33,17 +36,23 @@ export const LocationCityCountryContainer = styled.View`
 `;
 
 export const ImageContainer = styled.View`
-  align-items: center;
+  height: 170px;
+  align-self: center;
 `;
 
-export const TodayAnd7NextDaysContainer = styled.View`
+export const Image = styled.Image`
+  width: 170px;
+  height: 100%;
+`;
+
+export const TodayAnd5NextDaysContainer = styled.View`
   width: 100%;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
 `;
 
-export const Next7DaysContainer = styled.TouchableOpacity.attrs(() => ({
+export const Next5DaysContainer = styled.TouchableOpacity.attrs(() => ({
   activeOpacity: 0.6
 }))`
   flex-direction: row;

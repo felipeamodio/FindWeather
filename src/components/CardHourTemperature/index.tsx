@@ -1,27 +1,24 @@
 import React from "react";
-import { Image, ImageSourcePropType } from "react-native";
 import theme from "../../theme";
 import Divider from "../Divider";
 import Text from "../Text";
 
 import * as S from "./styles";
-
 interface ICardHourTemperature {
   id: number;
   temperatureValue: number;
-  icon: ImageSourcePropType;
+  icon: string;
   hour: string;
 }
-
 interface ICardHourTemperatureData {
   data: ICardHourTemperature[];
 }
 
 const CardHourTemperature = ({
   data,
-}: ICardHourTemperatureData) => {
+}: ICardHourTemperatureData): JSX.Element => {
   return (
-    <S.Container>
+    <>
       {data.map((item) => (
         <S.ContainerCard key={item.id}>
           <S.ContainerTemperature>
@@ -42,11 +39,11 @@ const CardHourTemperature = ({
             </Text>
           </S.ContainerTemperature>
 
-          <Divider top={8} />
+          <Divider top={5} />
 
-          <Image source={item.icon} />
+          <S.Image source={{ uri: `https:${item.icon}` }} />
 
-          <Divider top={8} />
+          <Divider top={5} />
 
           <Text
             fontFamily={theme.fontFamily.bold}
@@ -57,7 +54,7 @@ const CardHourTemperature = ({
           </Text>
         </S.ContainerCard>
       ))}
-    </S.Container>
+    </>
   );
 };
 

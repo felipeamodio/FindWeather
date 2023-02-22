@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
 import { Platform, StatusBar, TouchableOpacityProps } from 'react-native';
+import styled from 'styled-components/native';
 import theme from '../../theme';
 
 const getStatusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight : 0;
@@ -10,7 +10,7 @@ export const Container = styled.SafeAreaView`
 
 export const ScrollView = styled.ScrollView`
   flex: 1;
-  background-color: ${theme.colors.dark[500]};
+  background-color: ${theme.colors.dark};
   padding: 0 16px;
 `;
 
